@@ -15,6 +15,7 @@ Dir.mkdir('./ssl/CA/certs', 0700)
 Dir.mkdir('./ssl/CA/newcerts', 0700)
 Dir.mkdir('./ssl/CA/private', 0700)
 open "./ssl/CA/serial", 'w' do |io| io.write "01" end
+open "./ssl/CA/revoked", 'w' do |io| io.write "" end
 open "./ssl/CA/index.txt", 'w' do |io| io.write "" end  
 
 ca_key = OpenSSL::PKey::RSA.new 2048
@@ -38,10 +39,31 @@ ca_cert.add_extension    extension_factory.create_extension('subjectKeyIdentifie
 ca_cert.add_extension    extension_factory.create_extension('basicConstraints', 'CA:TRUE', true)
 ca_cert.add_extension    extension_factory.create_extension('keyUsage', 'cRLSign,keyCertSign', true)
 ca_cert.sign ca_key, OpenSSL::Digest::SHA1.new
-open './ssl/CA/cacert.pem', 'w' do |io|
-  io.write ca_cert.to_pem
-end
+# open './ssl/CA/cacert.pem', 'w' do |io|
+#   io.write ca_cert.to_pem
+# end
 pass_phrase = Rails.application.secrets.pass_phrase
-cipher = OpenSSL::Cipher.new 'AES-128-CBC'
-key_secure = ca_key.export cipher, pass_phrase
-open "./ssl/CA/private/cakey.pem", 'w' do |io| io.write key_secure end
+open './ssl/CA/cacert.p12', 'w:ASCII-8BIT' do |io|
+  io.write OpenSSL::PKCS12.create(pass_phrase, "root", ca_key, ca_cert).to_der
+end
+# cipher = OpenSSL::Cipher.new 'AES-128-CBC'
+# key_secure = ca_key.export cipher, pass_phrase
+# open "./ssl/CA/private/cakey.pem", 'w' do |io|
+#   io.write key_secure
+# end
+
+crl = OpenSSL::X509::CRL.new 
+crl.issuer = ca_name
+crl.version = 1
+crl.last_update = Time.now
+crl.next_update = Time.now + 1600
+ef = OpenSSL::X509::ExtensionFactory.new
+ef.issuer_certificate = ca_cert
+ef.crl = crl
+crlnum = OpenSSL::ASN1::Integer(1)
+crl.add_extension(OpenSSL::X509::Extension.new("crlNumber", crlnum))
+crl.sign(ca_key, OpenSSL::Digest::SHA1.new)
+open "./ssl/CA/crl.pem", 'w' do |io| 
+  io.write crl.to_pem 
+end 
+  

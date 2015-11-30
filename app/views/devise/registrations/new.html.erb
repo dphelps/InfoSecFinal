@@ -3,13 +3,25 @@
     <h3>Sign up</h3>
     <%= devise_error_messages! %>
     <div class="form-group">
-      <%= f.label :name %>
-      <%= f.text_field :name, :autofocus => true, class: 'form-control' %>
+      <%= f.label :uid %>
+      <%= f.text_field :uid, :autofocus => true, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= f.label :firstname %>
+      <%= f.text_field :firstname, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= f.label :lastname %>
+      <%= f.text_field :lastname, class: 'form-control' %>
     </div>
     <div class="form-group">
       <%= f.label :email %>
       <%= f.email_field :email, class: 'form-control' %>
     </div>
+      <div class="form-group">
+        <%= f.label :certificate_password %>
+        <%= f.password_field :certificate_password, class: 'form-control' %>
+      </div>
     <div class="form-group">
       <%= f.label :password %>
       <%= f.password_field :password, class: 'form-control' %>

@@ -2,6 +2,15 @@
   <div class="row">
     <h3>Users</h3>
     <div class="column">
+		<table class="table">
+          <tbody>
+              <tr>
+				Certificates Issued: <%= serial %><br />
+				Certificates Revoked: <%= revoked_count %><br />
+				Current Serial: <%= serial %><br />
+              </tr>
+          </tbody>
+        </table>
       <table class="table">
         <tbody>
           <% @users.each do |user| %>

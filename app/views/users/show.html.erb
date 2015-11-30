@@ -1,4 +1,51 @@
 <h3>User</h3>
-<p>Name: <%= @user.name if @user.name %></p>
-<p>Email: <%= @user.email if @user.email %></p>
+UID: <%= @user.uid if @user.uid %><br \>
+Firstname: <%= @user.firstname if @user.firstname %><br \>
+Lastname: <%= @user.lastname if @user.lastname %><br \>
+Email: <%= @user.email if @user.email %><br \>
+<br \>
+<%= link_to 'Edit account',  edit_user_registration_path%><br \>
+<%= link_to 'Download Certificate',  download_certificate_path%><br \>
+
+<br \>
+<%= form_tag('/certificate/new') do %>
+    <fieldset>
+      <p>Generate Certificate</p>
+      <div class="form-group">
+		  <%= label_tag(:password, "Enter Certificate Password:") %>
+		  <%= password_field_tag(:password, "", class: 'form-control') %>
+		  <%= submit_tag("Generate") %>
+      </div>
+    </fieldset>
+<% end %>
+
+<br \>
+<%= form_tag('/certificate/revoke') do %>
+    <fieldset>
+      <p>Revoke Certificate</p>
+      <div class="form-group">
+		  <%= label_tag(:certificate_password, "Enter Certificate Password:") %>
+		  <%= password_field_tag(:certificate_password, "", class: 'form-control') %>
+		  <%= label_tag(:revoke_reason, "Enter Revocation Reason:") %>
+		  <%= select_tag(:revoke_reason, options_for_select([['Unspecified', 0], ['Key Compromise', 1], ['CA Compromise', 2], ['Affiliation Changed', 3], ['Superceded', 4], ['Cessation of Operation', 5], ['Certificate Hold', 6]])) %>
+		  <%= submit_tag("Revoke") %>
+      </div>
+    </fieldset>
+<% end %>
+
+
+
+
+<br \>
+<%= form_tag('/certificate/status', multipart: true) do %>
+    <fieldset>
+      <p>Check Certificate Status</p>
+      <div class="form-group">
+		  <%= file_field_tag 'pkcs12_cert' %>
+		  <%= label_tag(:password, "Enter Certificate Password:") %>
+		  <%= password_field_tag(:password, "", class: 'form-control') %>
+		  <%= submit_tag("Check") %>
+      </div>
+    </fieldset>
+<% end %>
 

@@ -3,8 +3,16 @@
   <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put, :role => 'form'}) do |f| %>
     <%= devise_error_messages! %>
     <div class="form-group">
-      <%= f.label :name %>
-      <%= f.text_field :name, :autofocus => true, class: 'form-control' %>
+      <%= f.label :uid %>
+      <%= f.text_field :uid, :autofocus => true, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= f.label :firstname %>
+      <%= f.text_field :firstname, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= f.label :lastname %>
+      <%= f.text_field :lastname, class: 'form-control' %>
     </div>
     <div class="form-group">
       <%= f.label :email %>
@@ -29,6 +37,10 @@
       <div class="form-group">
         <%= f.label :current_password %>
         <%= f.password_field :current_password, class: 'form-control' %>
+      </div>
+      <div class="form-group">
+        <%= f.label :certificate_password %>
+        <%= f.password_field :certificate_password, class: 'form-control' %>
       </div>
     </fieldset>
     <%= f.submit 'Update', :class => 'button right' %>
